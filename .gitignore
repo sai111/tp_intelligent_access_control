@@ -1,0 +1,9 @@
+target/
+*.iml
+.idea/
+logs/
+META-INF/
+node_modules/
+bower_components/
+upload/
+classes/
