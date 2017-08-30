@@ -7,25 +7,37 @@
       </div>
       <div class="p-layout-collapse" @click="toggleSider"><span class="icon-menu"></span></div>
       <div class="p-layout-nav">
-        <el-dropdown class="is-user" @command="handleDropdown">
-          <img src="./assets/avatar.jpg" class="p-layout-avatar" alt="">
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="logout">退出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <div class="is-user clearfix">
+          <span class="log_name">你好</span>
+          <span><img src="./assets/avatar.jpg"/> </span>
+          <span class="icon-dropdown">
+            <el-dropdown>
+              <span class="el-dropdown-link" >
+                <i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>我的消息</el-dropdown-item>
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+        </div>
+
       </div>
     </div>
     <div class="p-layout-body" :class="{ 'sider-full': !isCollapse,'sider-mini': isCollapse }">
       <aside class="p-layout-sider">
-        <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"
+        <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+                 :collapse="isCollapse"
                  theme="dark"
                  :unique-opened="true"
                  :default-active="currentRoute"
                  :router="true">
-          <el-menu-item index="index" style="width:100%;"><i class="el-icon-menu"></i>主页</el-menu-item>
+
           <el-submenu
             :index="menu.name"
-            v-for="(menu, index) in menus">
+            v-for="(menu, index) in menus" :key="menus.text">
             <template slot="title">
               <i v-if="menu.icon" class="fa" :class="'el-icon-' + menu.icon"></i>
               <span class="nav-next">{{menu.text}}</span>
@@ -34,12 +46,14 @@
               <el-menu-item
                 :index="subMenu.name"
                 v-if="!subMenu.children"
-                v-for="(subMenu, subIndex) in menu.children">{{subMenu.text}}</el-menu-item>
+                v-for="(subMenu, subIndex) in menu.children" :key="menu.children.text">{{subMenu.text}}
+              </el-menu-item>
               <el-submenu v-else="!subMenu.children" :index="subMenu.name">
                 <span slot="title">{{subMenu.text}}</span>
                 <el-menu-item
                   :index="item.name"
-                  v-for="(item, index) in subMenu.children">{{item.text}}</el-menu-item>
+                  v-for="(item, index) in subMenu.children" :key="subMenu.children.text">{{item.text}}
+                </el-menu-item>
               </el-submenu>
             </el-menu-item-group>
           </el-submenu>
@@ -48,13 +62,12 @@
       <div class="p-layout-panel">
         <router-view></router-view>
       </div>
-
     </div>
     <div class="p-layout-footer"> 版权所有 © 2016</div>
   </div>
 </template>
 <script>
-//  import axios from 'axios'
+  //  import axios from 'axios'
   import auth from './auth'
   import menus from './nav-config'
   export default {
@@ -86,8 +99,11 @@
       handleDropdown (cmd) {
         if (cmd === 'logout') {
           auth.logout()
-          this.$router.replace({ name: 'login' })
+          this.$router.replace({name: 'login'})
         }
+      },
+      showItem (){
+        console.log("test");
       }
     }
 //  data () {
@@ -108,9 +124,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-  @import 'assets/less/home.less';
+  /*@import 'assets/less/home.less';*/
   @import '../static/css/style.css';
-  @black: #2a323c;
+
+  @black: #192848;
   @light-black: #324057;
   @extra-light-black: #475669;
   @blue: #03a9f4;
@@ -121,38 +138,38 @@
   @sider-collapse-width: 64px;
   @transition: all 0.3s ease;
   @cont-padding: 15px;
-  @fff:#fff;
+  @fff: #fff;
   h1, h2 {
     font-weight: normal;
   }
+
   ul {
     list-style-type: none;
     padding: 0;
   }
 
-  li {
-    display: inline-block;
-  }
-
   a {
     color: #42b983;
   }
+
   html, body, #app {
     margin: 0;
     height: 100%;
   }
- .fa{
-   display: inline-block;
-   width: 20px;
-   height: 20px;
- }
+
+  .fa {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+  }
+
   .p-layout-topbar {
     position: fixed;
     width: 100%;
     height: @top-height;
     line-height: @top-height;
     background-color: @black;
-   // background-color: @blue;-->
+    // background-color: @blue;-->
     z-index: 101;
     color: @gray;
   }
@@ -214,10 +231,12 @@
     transition: @transition;
     z-index: 102;
   }
-  .el-menu-item-group__title{
+
+  .el-menu-item-group__title {
     padding: 0;
 
   }
+
   .p-layout-user {
     padding: 20px;
     text-align: center;
@@ -236,7 +255,6 @@
     top: 0;
     bottom: 0;
     right: 0;
-    overflow: hidden;
     background: #f5f5f5;
     transition: @transition;
     width: auto;
@@ -258,9 +276,11 @@
     z-index: 100;
     height: calc(100% - 64px);
   }
+
   .p-layout-body .p-layout-panel {
     left: @sider-width;
   }
+
   .p-layout-body {
     &.sider-mini {
       .p-layout-panel {
@@ -286,14 +306,12 @@
       }
     }
   }
+
   .p-layout-content {
-    overflow-y: auto;
     .p-layout-container {
       padding: 15px;
       .p-layout-breadcrumb {
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-        padding: 25px 15px;
-        background-color: @fff;
+        padding: 10px 15px;
         margin: -15px -15px 0 -15px;
       }
       .p-layout-inner {
@@ -304,7 +322,7 @@
       }
     }
   }
-/*
+
   .p-layout {
     &-header {
       padding: 20px 10px;
@@ -318,17 +336,37 @@
       &:after {
         clear: both;
       }
-      .is-user {
-        float: right;
-      }
     }
   }
-  */
 
+  .p-layout-nav {
+    float: right;
+    padding-right: 50px;
+    text-align: right;
+    .is-user {
+      color: @black;
+      font-size: 14px;
+      cursor: pointer;
+      .log_name {
+        color: #fff;
+        float: left;
+      }
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        margin: 10px 0 10px 10px;
+        float: left;
+      }
+
+    }
+  }
+
+  // footer
   .p-layout-footer {
-    position:fixed;
-    bottom:0;
-    left:0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
     height: 64px;
     line-height: 64px;
     text-align: center;
@@ -349,7 +387,8 @@
   .el-submenu .el-menu-item:hover, .el-submenu__title:hover {
     background: #475669;
   }
-  #index:hover{
+
+  #index:hover {
     background: #475669;
   }
 
@@ -363,8 +402,12 @@
     padding: 0;
   }
 
- li.el-menu-item{
-   color:#d3dce6;
- }
+  li.el-menu-item {
+    color: #d3dce6;
+  }
+   /*去掉主页的下拉菜单按钮*/
+  li.el-submenu:nth-child(1) .el-submenu__title i.el-submenu__icon-arrow {
+    display: none;
+  }
 </style>
 

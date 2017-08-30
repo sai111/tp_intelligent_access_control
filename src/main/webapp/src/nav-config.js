@@ -1,5 +1,11 @@
 const nav =[
   {
+    name: 'index',
+    text: '主页',
+    icon: 'menu',
+    path: '/index'
+  },
+  {
     name: 'people',
     text: '人员管理',
     icon: 'setting',
